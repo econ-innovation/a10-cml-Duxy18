@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# 设置存储路径和文件基础名
+base_path="\\wsl.localhost\Debian\home\duxy18"
+file_base="file"
+dir_base="dir"
+
+# 设置专利数据的总数
+total_patents=10000
+
+# 循环创建目录、文件和专利数据
+for ((i = 1; i <= total_patents; i++)); do
+    # 计算目录、文件和数据的序号，补零到合适的位数
+    dir_num=$(printf "%03d" $(( (i - 1) / (100 * 100) + 1)))
+    file_num=$(printf "%03d" $((( (i - 1) / 100) % 100 + 1)))
+    data_num=$(printf "%05d" $i)
+
+    # 构建目录、文件和数据路径
+    dir_path="$base_path/$dir_base$dir_num"
+    file_path="$dir_path/$file_base$file_num"
+    data_path="$file_path/data_$data_num.txt"
+
+    # 创建目录和文件
+    mkdir -p "$dir_path"
+    touch "$file_path"
+
+    # 获取专利数据的命令, 并保存到 data_path 中
+    curl -o "$data_path" "https://example.com/get_patent_data?id=$data_num"
+
